@@ -1,7 +1,19 @@
-import Value from "./src/value.js";
-import { Optimizer,Adam,Adagrad,SGD } from "./src/optimizer.js";
-import { Layer,ReLU,Tanh,Linear,LayerNorm,Softmax, Model} from "./src/layer.js";
-import { readFileSync } from 'fs'; 
+import {
+    Value,
+    Layer,
+    LayerNorm,
+    Linear,
+    ReLU,
+    Tanh,
+    Dropout,
+    Softmax,
+    Optimizer,
+    Adagrad,
+    Adam,
+    RMSprop,
+    SGD,
+    Model
+} from './index.js'
 
 
 
@@ -66,9 +78,7 @@ model.save('model.json')
 console.log('model saved')
 
 
-
-const modelJson = readFileSync('model.json', 'utf-8');
-const loadedModel = Model.load(modelJson);
+const loadedModel = Model.load('model.json');
 
 // After training, make predictions on new data
 const test_X = new Value([

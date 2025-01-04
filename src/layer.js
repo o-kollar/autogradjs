@@ -1,5 +1,6 @@
 import Value from "./value.js";
-import { writeFileSync } from 'fs'; 
+import { writeFileSync,readFileSync } from 'fs'; 
+
 
 function randn_bm() {
     let u = 1 - Math.random(); 
@@ -228,7 +229,9 @@ export class Model extends Layer{
         writeFileSync(filename || 'model.json', jsonString);
     }
 
-    static load(jsonData) {
+    static load(filename) {
+        const jsonData = readFileSync(filename, 'utf-8');
+
         const modelData = JSON.parse(jsonData);
         const layers = modelData.layers.map(layerData => {
             switch (layerData.type) {
