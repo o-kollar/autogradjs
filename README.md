@@ -1,4 +1,4 @@
-# Deep Learning Framework in JavaScript
+# AutoGradJS
 
 This repository contains a minimalistic deep learning framework written in JavaScript. The framework includes classes for building and training neural networks, implementing common machine learning layers, activation functions, optimizers, and loss functions. The core functionality allows users to define and train models using stochastic gradient descent (SGD), Adam, RMSprop, Adagrad, and other optimization algorithms.
 
@@ -44,20 +44,6 @@ This repository contains a minimalistic deep learning framework written in JavaS
 
 - Node.js (v12 or later)
 
-### Installation
-
-Clone this repository to your local machine:
-
-```bash
-git clone https://github.com/your-repository/deep-learning-framework.git
-cd deep-learning-framework
-```
-
-Install the required dependencies:
-
-```bash
-npm install
-```
 
 ### Usage
 
