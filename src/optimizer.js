@@ -135,6 +135,55 @@ export class RMSprop extends Optimizer {
     }
 }
 
+export class AdamW extends Optimizer {
+    constructor(parameters, lr=0.001, betas=[0.9, 0.999], eps=1e-8, weight_decay=0.01) {
+        super(parameters, lr);
+        this.betas = betas;
+        this.eps = eps;
+        this.weight_decay = weight_decay;
+        this.t = 0;
+
+        // Initialize momentum and velocity terms
+        this.m = parameters.map(param => 
+            Array(param.data.length).fill()
+                .map(() => Array(param.data[0].length).fill(0))
+        );
+        this.v = parameters.map(param => 
+            Array(param.data.length).fill()
+                .map(() => Array(param.data[0].length).fill(0))
+        );
+    }
+
+    step() {
+        this.t += 1;
+        const [beta1, beta2] = this.betas;
+
+        this.parameters.forEach((param, i) => {
+            for (let row = 0; row < param.data.length; row++) {
+                for (let col = 0; col < param.data[0].length; col++) {
+                    // Update biased first moment estimate
+                    this.m[i][row][col] = beta1 * this.m[i][row][col] + 
+                        (1 - beta1) * param.grad[row][col];
+
+                    // Update biased second raw moment estimate
+                    this.v[i][row][col] = beta2 * this.v[i][row][col] + 
+                        (1 - beta2) * param.grad[row][col] * param.grad[row][col];
+
+                    // Compute bias-corrected first moment estimate
+                    const m_hat = this.m[i][row][col] / (1 - Math.pow(beta1, this.t));
+
+                    // Compute bias-corrected second raw moment estimate
+                    const v_hat = this.v[i][row][col] / (1 - Math.pow(beta2, this.t));
+
+                    // Update parameters with Adam update and decoupled weight decay
+                    param.data[row][col] = (1 - this.lr * this.weight_decay) * param.data[row][col] -
+                        this.lr * m_hat / (Math.sqrt(v_hat) + this.eps);
+                }
+            }
+        });
+    }
+}
+
 // AdaGrad optimizer
 export class Adagrad extends Optimizer {
     constructor(parameters, lr=0.01, eps=1e-10, weight_decay=0) {
